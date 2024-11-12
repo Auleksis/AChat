@@ -1,0 +1,62 @@
+version: "3.8"
+services:
+  nginx_v_2:
+    container_name: nginx_v_2
+    build:
+      context: ./AChatFrontend
+      dockerfile: Dockerfile
+    volumes:
+      - "./AChatFrontend/nginx/access_log.log:/var/log/nginx/access_log.log"
+    ports:
+      - 80:80
+    networks:
+      - net
+    depends_on:
+      - chat_v_2
+      - website_v_2
+
+  db_v_2:
+    image: mongo:8.0.3
+    container_name: db_v_2
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    networks:
+      - net
+    ports:
+      - "27017"
+    restart: always
+    volumes:
+      - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - ./db/dump:/data/db
+
+  website_v_2:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: website_v_2
+    volumes:
+      - "./.env:/app/.env"
+    networks:
+      - net
+    ports:
+      - "5174"
+    depends_on:
+      - db_v_2
+
+  chat_v_2:
+    build:
+      context: ./chat/chat
+      dockerfile: Dockerfile
+    container_name: chat_v_2
+    volumes:
+      - "./.env:/app/.env"
+    networks:
+      - net
+    ports:
+      - "8000"
+
+networks:
+  net:
+    driver: bridge

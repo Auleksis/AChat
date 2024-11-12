@@ -1,0 +1,9 @@
+fastapi[all]
+uvicorn
+pymongo
+motor
+python-dotenv
+mongoengine
+bcrypt
+psycopg2-binary
+pyjwt
