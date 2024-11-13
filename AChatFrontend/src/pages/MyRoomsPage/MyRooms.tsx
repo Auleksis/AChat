@@ -34,8 +34,11 @@ const MyRoomsPage = () => {
     setRooms(rooms.filter((room) => room.id != id));
   };
 
-  const onRoomCreate = (room: Room) => {
-    setRooms([...rooms, room]);
+  const onRoomCreate = async (room: Room) => {
+    //setRooms([...rooms, room]);
+    let page = Math.floor(rooms.length / roomPageCount);
+    const fetched = await fetchRooms(page);
+    setRooms(fetched);
     setFormVisible(false);
   };
 

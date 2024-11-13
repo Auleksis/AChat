@@ -1,14 +1,55 @@
-1. Для запуска базы данных нужно в корне проекта ввести
-   docker compose build
-   docker compose up
-2. Для запуска бэкэнда website спускаемся в папку website
-   pip install --no-cache-dir -r requirements.txt
-   python -m uvicorn app.main:app --host 0.0.0.0 --port 5174 --reload --env-file ../.env
+# Как запустить проект
 
-3. Для запуска бэкэнда chat спускаемся в папку chat/chat
-   RUN pip install --no-cache-dir -r requirements.txt
-   python -m uvicorn app.main:app --host 0.0.0.0 --port 5174 --reload --env-file ../.env
+## 1. Создайте .env файл в корневой папке проекта, если такого ещё нет
 
-4. Для запуска фронтэнда
-   npm i
-   npm run dev
+```.env
+MONGO_INITDB_ROOT_USERNAME=yourusername
+MONGO_INITDB_ROOT_PASSWORD=yourpassword
+MONGO_INITDB_DATABASE=AChatDB
+
+DATABASE_URI="mongodb://yourusername:yourpassword@db_v_2:27017/AChatDB?authSource=admin&authMechanism=SCRAM-SHA-256"
+
+JWT_KEY=yourkey
+```
+
+**Если вы получили проект из архива, значит .env файл уже присутствует!**
+
+## 2. Запустите docker на своём компьютере
+
+Это запустит процесс, необходимый для выполнения следующего шага.
+
+## 3. Откройте терминал и введите команду
+
+```shell
+docker compose build
+docker compose up -d
+```
+
+## 4. Откройте сайт
+
+Введите в поисковой строке вашего браузера
+
+```
+http://localhost/
+```
+
+Нажмите Enter и регистрируйтесь :)
+
+# Описание директорий проекта
+
+## AChatFrontend
+
+AChatFrontend содержит в себе frontend-часть, реализованную на React с использованием axios для вызова API сервера и React Router Dom для навигации.
+По пути **AchatFrontend/nginx** находится **файл конфигурации nginx**, а также **access log**.
+
+## chat/chat
+
+По пути chat/chat располагается директория FastAPI-решения, ответственного за реализацию функционала чата с использованием веб-сокетов.
+
+## website
+
+В директории website находится FastAPI-решение, ответственное за реализацию функционала работы с комнатами и пользователями.
+
+## db
+
+В директории db находится файл инициализации MongoDB **mongo-init.js**, а также директория dump, сохраняющая данные БД.

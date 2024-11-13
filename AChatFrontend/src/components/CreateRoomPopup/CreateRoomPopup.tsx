@@ -29,9 +29,12 @@ const CreateRoomPopup: React.FunctionComponent<CreateRoomPopupProps> = ({
       return;
     }
 
-    const room = await createRoom(roomName);
-
-    onCreate(room);
+    try {
+      const room = await createRoom(roomName);
+      onCreate(room);
+    } catch (e) {
+      setError("A room with this name already exists");
+    }
   };
 
   const onFormCancel = () => {
